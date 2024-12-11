@@ -11,13 +11,13 @@ namespace Blog.Service
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ICategoryRepository _categoryRepository;
-        public CategoryService(ICategoryRepository categoryRepository)
+        readonly IRepository<Category> _categoryRepository;
+        public CategoryService(IRepository<Category> categoryRepository)
         {
             _categoryRepository = categoryRepository;
         }
         public List<Category> GetAllCategories() => _categoryRepository.GetList();
-        public Category GetCategoryById(int id) => _categoryRepository.GetList().FirstOrDefault(x => x.Id == id);
+        public Category GetCategoryById(int id) => _categoryRepository.GetById(id);
         public bool AddCategory(Category category)
         {
             return _categoryRepository.Add(category);

@@ -11,15 +11,15 @@ namespace Blog.Service
 {
     public class CommentService : ICommentService
     {
-        private readonly ICommentRepository _commentRepository;
-        public CommentService(ICommentRepository commentRepository)
+        readonly IRepository<Comment> _commentRepository;
+        public CommentService(IRepository<Comment> commentRepository)
         {
             _commentRepository = commentRepository;
         }
 
         public List<Comment> GetAllComments() => _commentRepository.GetList();
 
-        public Comment GetCommentById(int id) => _commentRepository.GetList().FirstOrDefault(x => x.Id == id);
+        public Comment GetCommentById(int id) => _commentRepository.GetById(id);
 
         public bool AddComment(Comment comment)
         {
@@ -28,7 +28,7 @@ namespace Blog.Service
 
         public bool UpdateComment(int id, Comment comment)
         {
-            return _commentRepository.Update( comment,id);
+            return _commentRepository.Update(comment, id);
         }
 
         public bool DeleteComment(int id)

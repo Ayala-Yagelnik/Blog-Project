@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Blog.Data.Repositories
 {
-    public class TagRepository : ITagRepository
+    public class TagRepository : IRepository<Tag>
     {
         private readonly DataContext _dataContext;
 
@@ -17,38 +17,59 @@ namespace Blog.Data.Repositories
 
         public List<Tag> GetList()
         {
-            return _dataContext.TagData;
+            return _dataContext.Tags.ToList();
         }
 
         public Tag GetById(int id)
         {
-            return _dataContext.TagData.FirstOrDefault(t => t.Id == id);
+            return _dataContext.Tags.FirstOrDefault(t => t.Id == id);
         }
 
         public bool Add(Tag tag)
         {
-            tag.Id = _dataContext.TagData.Any() ? _dataContext.TagData.Max(t => t.Id) + 1 : 1;
-
-            _dataContext.TagData.Add(tag);
-            return _dataContext.SaveTagData();
+            try
+            {
+                _dataContext.Tags.Add(tag);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public bool Delete(int id)
         {
-            Tag tag = GetById(id);
-            if (tag == null) return false;
+            try
+            {
+                Tag tag = GetById(id);
+                if (tag == null) return false;
 
-            _dataContext.TagData.Remove(tag);
-            return _dataContext.SaveTagData();
+                _dataContext.Tags.Remove(tag);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public bool Update(Tag tag, int id)
         {
             Tag original = GetById(id);
             if (original == null) return false;
-
-            SetFields(original, tag);
-            return _dataContext.SaveTagData();
+            try
+            {
+                SetFields(original, tag);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private void SetFields(Tag original, Tag updated)

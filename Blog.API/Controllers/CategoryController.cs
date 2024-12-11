@@ -10,7 +10,7 @@ namespace Blog.API.Controllers
     [ApiController]
     public class CategoryController : ControllerBase
     {
-        private readonly ICategoryService _categoryService;
+        readonly ICategoryService _categoryService;
         public CategoryController(ICategoryService categoryService)
         {
             _categoryService = categoryService;
@@ -41,7 +41,7 @@ namespace Blog.API.Controllers
         public ActionResult<bool> Post([FromBody] Category category)
         {
             bool success = _categoryService.AddCategory(category);
-            return success ? true : NotFound();
+            return success ? true : BadRequest();
         }
 
         // PUT api/<CategoryContoller>/5

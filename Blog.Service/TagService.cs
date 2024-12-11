@@ -11,16 +11,16 @@ namespace Blog.Service
 {
     public class TagService : ITagService
     {
-        private readonly ITagRepository _tagRepository;
+        private readonly IRepository<Tag> _tagRepository;
 
-        public TagService(ITagRepository tagRepository)
+        public TagService(IRepository<Tag> tagRepository)
         {
             _tagRepository = tagRepository;
         }
 
         public List<Tag> GetAllTags() => _tagRepository.GetList();
 
-        public Tag GetTagById(int id) => _tagRepository.GetList().FirstOrDefault(x => x.Id == id);
+        public Tag GetTagById(int id) => _tagRepository.GetById(id);
 
         public bool AddTag(Tag tag)
         {

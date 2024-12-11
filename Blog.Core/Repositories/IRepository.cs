@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace Blog.Core.Repositories
 {
-    public interface ICategoryRepository
+    public interface IRepository<T>
     {
-        List<Category> GetList();
-        Category? GetById(int id);
-        bool Add(Category category);
-        bool Update(Category category,int id);
+        List<T> GetList();
+        T GetById(int id);
+        bool Add(T entity);
+        bool Update(T entity, int id);
         bool Delete(int id);
     }
 }

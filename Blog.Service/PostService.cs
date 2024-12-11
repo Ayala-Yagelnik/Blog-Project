@@ -11,16 +11,16 @@ namespace Blog.Service
 {
     public class PostService : IPostService
     {
-        private readonly IPostRepository _postRepository;
+        private readonly IRepository<Post> _postRepository;
 
-        public PostService(IPostRepository postRepository)
+        public PostService(IRepository<Post> postRepository)
         {
             _postRepository = postRepository;
         }
 
         public List<Post> GetAllPosts() => _postRepository.GetList();
 
-        public Post GetPostById(int id) => _postRepository.GetList().FirstOrDefault(x => x.Id == id);
+        public Post GetPostById(int id) => _postRepository.GetById(id);
 
         public bool AddPost(Post post)
         {
@@ -29,7 +29,7 @@ namespace Blog.Service
 
         public bool UpdatePost(int id, Post post)
         {
-            return _postRepository.Update( post, id);
+            return _postRepository.Update(post, id);
         }
 
         public bool DeletePost(int id)

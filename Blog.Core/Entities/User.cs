@@ -1,7 +1,14 @@
-﻿namespace Blog.Core.Entities
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
+
+namespace Blog.Core.Entities
 {
+    [Table("Users")]
     public class User
     {
+        [Key]
+        [JsonIgnore]
         public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }

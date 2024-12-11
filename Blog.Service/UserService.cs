@@ -11,16 +11,16 @@ namespace Blog.Service
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IRepository<User> _userRepository;
 
-        public UserService(IUserRepository userRepository)
+        public UserService(IRepository<User> userRepository)
         {
             _userRepository = userRepository;
         }
 
         public List<User> GetAllUsers() => _userRepository.GetList();
 
-        public User GetUserById(int id) => _userRepository.GetList().FirstOrDefault(x => x.Id == id);
+        public User GetUserById(int id) => _userRepository.GetById(id);
 
         public bool AddUser(User user)
         {

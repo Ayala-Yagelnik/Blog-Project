@@ -10,7 +10,7 @@ namespace Blog.API.Controllers
     [ApiController]
     public class TagController : ControllerBase
     {
-        private readonly ITagService _tagService;
+        readonly ITagService _tagService;
 
         public TagController(ITagService tagService)
         {

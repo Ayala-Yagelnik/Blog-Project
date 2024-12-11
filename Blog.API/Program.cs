@@ -1,4 +1,6 @@
+using Microsoft.EntityFrameworkCore;
 using Blog.Core.Repositories;
+using Blog.Core.Entities;
 using Blog.Core.Services;
 using Blog.Data;
 using Blog.Data.Repositories;
@@ -10,18 +12,17 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
-builder.Services.AddScoped<ICommentRepository, CommentRepository>();
-builder.Services.AddScoped<IPostRepository, PostRepository>();
-builder.Services.AddScoped<ITagRepository, TagRepository>();
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IRepository<Category>, CategoryRepository>();
+builder.Services.AddScoped<IRepository<Comment>, CommentRepository>();
+builder.Services.AddScoped<IRepository<Post>, PostRepository>();
+builder.Services.AddScoped<IRepository<Tag>, TagRepository>();
+builder.Services.AddScoped<IRepository<User>, UserRepository>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IPostService, PostService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddSingleton<DataContext>();
-builder.Services.AddSingleton<DataPathes>();
+builder.Services.AddDbContext<DataContext>();
 
 
 builder.Services.AddControllers();

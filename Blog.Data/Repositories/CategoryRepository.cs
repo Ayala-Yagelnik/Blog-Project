@@ -7,7 +7,7 @@ using Blog.Core.Services;
 
 namespace Blog.Data.Repositories
 {
-    public class CategoryRepository:ICategoryRepository
+    public class CategoryRepository : IRepository<Category>
     {
         private readonly DataContext _dataContext;
 
@@ -18,47 +18,67 @@ namespace Blog.Data.Repositories
 
         public List<Category> GetList()
         {
-            return _dataContext.CategoryData;
+            return _dataContext.Categories.ToList();
         }
 
         public Category GetById(int id)
         {
-            return _dataContext.CategoryData.FirstOrDefault(v => v.Id == id);
+            return _dataContext.Categories.FirstOrDefault(v => v.Id == id);
         }
 
         public bool Add(Category category)
         {
-            category.Id = _dataContext.CategoryData.Any()
-                ? _dataContext.CategoryData.Max(v => v.Id) + 1
-                : 1;
-
-            _dataContext.CategoryData.Add(category);
-            return _dataContext.SaveCategoryData();
+            try
+            {
+                _dataContext.Categories.Add(category);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public bool Delete(int id)
         {
-            Category category = GetById(id);
-            if (category == null) return false;
+            try
+            {
+                Category category = GetById(id);
+                if (category == null) return false;
 
-            _dataContext.CategoryData.Remove(category);
-            return _dataContext.SaveCategoryData();
+                _dataContext.Categories.Remove(category);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
         }
 
+    
+        public bool Update(Category category, int id)
+        {
+            Category original = GetById(id);
+            if (original == null) return false;
+            try
+            {
+                SetFields(original, category);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
         private void SetFields(Category original, Category updated)
         {
             original.Name = updated.Name;
             original.ParentID = updated.ParentID;
             original.Description = updated.Description;
-        }
-
-        public bool Update( Category category,int id)
-        {
-            Category original = GetById(id);
-            if (original == null) return false;
-
-            SetFields(original, category);
-            return _dataContext.SaveCategoryData();
         }
 
     }

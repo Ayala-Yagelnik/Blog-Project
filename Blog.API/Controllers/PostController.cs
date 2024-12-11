@@ -10,7 +10,7 @@ namespace Blog.API.Controllers
     [ApiController]
     public class PostController : ControllerBase
     {
-        private readonly IPostService _postService;
+        readonly IPostService _postService;
 
         public PostController(IPostService postService)
         {

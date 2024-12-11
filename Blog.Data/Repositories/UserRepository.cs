@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Blog.Data.Repositories
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : IRepository<User>
     {
         private readonly DataContext _dataContext;
 
@@ -17,38 +17,59 @@ namespace Blog.Data.Repositories
 
         public List<User> GetList()
         {
-            return _dataContext.UserData;
+            return _dataContext.Users.ToList();
         }
 
         public User GetById(int id)
         {
-            return _dataContext.UserData.FirstOrDefault(u => u.Id == id);
+            return _dataContext.Users.FirstOrDefault(u => u.Id == id);
         }
 
         public bool Add(User user)
         {
-            user.Id = _dataContext.UserData.Any() ? _dataContext.UserData.Max(u => u.Id) + 1 : 1;
-
-            _dataContext.UserData.Add(user);
-            return _dataContext.SaveUserData();
+            try
+            {
+                _dataContext.Users.Add(user);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public bool Delete(int id)
         {
-            User user = GetById(id);
-            if (user == null) return false;
+            try
+            {
+                User user = GetById(id);
+                if (user == null) return false;
 
-            _dataContext.UserData.Remove(user);
-            return _dataContext.SaveUserData();
+                _dataContext.Users.Remove(user);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public bool Update(User user, int id)
         {
             User original = GetById(id);
             if (original == null) return false;
-
-            SetFields(original, user);
-            return _dataContext.SaveUserData();
+            try
+            {
+                SetFields(original, user);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private void SetFields(User original, User updated)

@@ -5,59 +5,80 @@ using System.Collections.Generic;
 using System.Linq;
 
 namespace Blog.Data.Repositories
+{
+    public class CommentRepository : IRepository<Comment>
     {
-        public class CommentRepository : ICommentRepository
+        private readonly DataContext _dataContext;
+
+        public CommentRepository(DataContext dataContext)
         {
-            private readonly DataContext _dataContext;
+            _dataContext = dataContext;
+        }
 
-            public CommentRepository(DataContext dataContext)
+        public List<Comment> GetList()
+        {
+            return _dataContext.Comments.ToList();
+        }
+
+        public Comment GetById(int id)
+        {
+            return _dataContext.Comments.FirstOrDefault(c => c.Id == id);
+        }
+
+        public bool Add(Comment comment)
+        {
+            try
             {
-                _dataContext = dataContext;
+                _dataContext.Comments.Add(comment);
+                _dataContext.SaveChanges();
+                return true;
             }
-
-            public List<Comment> GetList()
+            catch (Exception)
             {
-                return _dataContext.CommentData;
+                return false;
             }
+        }
 
-            public Comment GetById(int id)
-            {
-                return _dataContext.CommentData.FirstOrDefault(c => c.Id == id);
-            }
-
-            public bool Add(Comment comment)
-            {
-                comment.Id = _dataContext.CommentData.Any() ? _dataContext.CommentData.Max(c => c.Id) + 1 : 1;
-
-                _dataContext.CommentData.Add(comment);
-                return _dataContext.SaveCommentData();
-            }
-
-            public bool Delete(int id)
+        public bool Delete(int id)
+        {
+            try
             {
                 Comment comment = GetById(id);
                 if (comment == null) return false;
 
-                _dataContext.CommentData.Remove(comment);
-                return _dataContext.SaveCommentData();
+                _dataContext.Comments.Remove(comment);
+                _dataContext.SaveChanges();
+                return true;
             }
-
-            public bool Update( Comment comment,int id)
+            catch (Exception)
             {
-                Comment original = GetById(id);
-                if (original == null) return false;
-
-                SetFields(original, comment);
-                return _dataContext.SaveCommentData();
-            }
-
-            private void SetFields(Comment original, Comment updated)
-            {
-                original.Content = updated.Content;
-                original.AuthorId = updated.AuthorId;
-                original.PostId = updated.PostId;
-                original.CreatedAt = updated.CreatedAt;
+                return false;
             }
         }
+
+        public bool Update(Comment comment, int id)
+        {
+            Comment original = GetById(id);
+            if (original == null) return false;
+            try
+            {
+                SetFields(original, comment);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        private void SetFields(Comment original, Comment updated)
+        {
+            original.Content = updated.Content;
+            original.AuthorId = updated.AuthorId;
+            original.PostId = updated.PostId;
+            original.CreatedAt = updated.CreatedAt;
+        }
     }
+}
 

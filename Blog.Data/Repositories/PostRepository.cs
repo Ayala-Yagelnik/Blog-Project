@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Blog.Data.Repositories
 {
-    public class PostRepository : IPostRepository
+    public class PostRepository : IRepository<Post>
     {
         private readonly DataContext _dataContext;
 
@@ -17,38 +17,59 @@ namespace Blog.Data.Repositories
 
         public List<Post> GetList()
         {
-            return _dataContext.PostData;
+            return _dataContext.Posts.ToList();
         }
 
         public Post GetById(int id)
         {
-            return _dataContext.PostData.FirstOrDefault(p => p.Id == id);
+            return _dataContext.Posts.FirstOrDefault(p => p.Id == id);
         }
 
         public bool Add(Post post)
         {
-            post.Id = _dataContext.PostData.Any() ? _dataContext.PostData.Max(p => p.Id) + 1 : 1;
-
-            _dataContext.PostData.Add(post);
-            return _dataContext.SavePostData();
+            try
+            {
+                _dataContext.Posts.Add(post);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public bool Delete(int id)
         {
-            Post post = GetById(id);
-            if (post == null) return false;
+            try
+            {
+                Post post = GetById(id);
+                if (post == null) return false;
 
-            _dataContext.PostData.Remove(post);
-            return _dataContext.SavePostData();
+                _dataContext.Posts.Remove(post);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
-        public bool Update( Post post,int id)
+        public bool Update(Post post, int id)
         {
             Post original = GetById(id);
             if (original == null) return false;
-
-            SetFields(original, post);
-            return _dataContext.SavePostData();
+            try
+            {
+                SetFields(original, post);
+                _dataContext.SaveChanges();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         private void SetFields(Post original, Post updated)
