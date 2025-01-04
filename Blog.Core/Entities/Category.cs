@@ -13,5 +13,9 @@ namespace Blog.Core.Entities
         public string Name { get; set; }
         public int ParentID { get; set; }
         public string Description { get; set; }
+        public int AuthorId { get; set; }
+        [ForeignKey("AuthorId")]
+        public User Author { get; set; }
+        public List<Post> Posts { get; set; }
     }
 }

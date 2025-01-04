@@ -76,8 +76,8 @@ namespace Blog.Data.Repositories
         {
             original.Title = updated.Title;
             original.Content = updated.Content;
-            original.AuthorId = updated.AuthorId;
-            original.CategoryId = updated.CategoryId;
+            original.Author = updated.Author;
+            original.Category = updated.Category;
             original.CreatedAt = updated.CreatedAt;
             original.Tags = updated.Tags;
             original.ViewsAmount = updated.ViewsAmount;

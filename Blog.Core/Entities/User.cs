@@ -18,5 +18,9 @@ namespace Blog.Core.Entities
         public byte[] Icon { get; set; }
         public string Bio { get; set; }
         public DateTime RegistrationDate { get; set; }
+        public List<Category> Categories { get; set; }
+        public List<Comment> Comments { get; set; }
+        public List<Post> Posts { get; set; }
+        public List<Tag> Tags { get; set; }
     }
 }

@@ -75,8 +75,8 @@ namespace Blog.Data.Repositories
         private void SetFields(Comment original, Comment updated)
         {
             original.Content = updated.Content;
-            original.AuthorId = updated.AuthorId;
-            original.PostId = updated.PostId;
+            original.Author = updated.Author;
+            original.Post = updated.Post;
             original.CreatedAt = updated.CreatedAt;
         }
     }

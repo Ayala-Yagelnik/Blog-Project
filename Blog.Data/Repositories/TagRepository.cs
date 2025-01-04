@@ -77,7 +77,7 @@ namespace Blog.Data.Repositories
             original.Name = updated.Name;
             original.UsageAmount = updated.UsageAmount;
             original.Description = updated.Description;
-            original.CreatorId = updated.CreatorId;
+            original.Author = updated.Author;
             original.IsActive = updated.IsActive;
         }
     }

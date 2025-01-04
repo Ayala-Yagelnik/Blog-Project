@@ -12,7 +12,11 @@ namespace Blog.Core.Entities
         public int Id { get; set; }
         public string Content { get; set; }
         public int AuthorId { get; set; }
+        [ForeignKey("AuthorId")]
+        public User Author { get; set; }
         public int PostId { get; set; }
+        [ForeignKey("PostId")]
+        public Post Post { get; set; }
         public DateTime CreatedAt { get; set; }
     }
 }
